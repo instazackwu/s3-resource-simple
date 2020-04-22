@@ -42,10 +42,3 @@ if [ "$skip_download" = "false" ]; then
 else
   echo "Skipping download..."
 fi
-
-timestamps=$(aws s3api list-objects --bucket $bucket --prefix "$path" --query 'Contents[].{LastModified: LastModified}')
-recent="$(echo $timestamps | jq -r 'max_by(.LastModified)')"
-
-jq -n "{
-  version: $recent
-}" >&3
