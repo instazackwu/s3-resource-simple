@@ -11,6 +11,7 @@ RUN apk add python3
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 \
 	&& mv jq-linux64 /usr/local/bin/jq \
 	&& chmod +x /usr/local/bin/jq
+RUN apk add py-pip
 RUN pip3 install --upgrade pip
 RUN pip3 install --upgrade awscli
 
