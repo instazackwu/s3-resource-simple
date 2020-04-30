@@ -19,7 +19,7 @@ payload=`cat`
 bucket=$(echo "$payload" | jq -r '.source.bucket')
 path=$(echo "$payload" | jq -r '.source.path // ""')
 options=$(echo "$payload" | jq -r '.params.options // [] | join(" ")')
-skip_download="$(echo "$payload" | jq -r '.params.skip_download // false')"
+skip_download="$(echo "$payload" | jq -r '.source.skip_download // false')"
 
 # export for `aws` cli
 AWS_ACCESS_KEY_ID=$(echo "$payload" | jq -r '.source.access_key_id // empty')
@@ -36,9 +36,11 @@ fi
 [ -n "$AWS_DEFAULT_REGION" ] && export AWS_DEFAULT_REGION
 
 if [ "$skip_download" = "false" ]; then
-  echo "Downloading from S3..."
+  echo "Downloading from s3://$bucket/$path to $dest with options $options..."
   eval aws s3 sync "s3://$bucket/$path" $dest $options
   echo "...done."
 else
   echo "Skipping download..."
 fi
+
+source "$(dirname $0)/emit.sh" >&3
